@@ -22,9 +22,9 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const res = await axios.post("/api/auth/login", { email, password });
+      const res = await axios.post("/api/auth/login", { email: email.trim(), password });
       toast.success("Welcome back, " + res.data.user.name);
-      
+
       // Redirect based on role
       if (res.data.user.role === "SUPER_ADMIN") {
         router.push("/admin-dashboard");
@@ -43,14 +43,14 @@ export default function LoginPage() {
       {/* Left Side: Illustration/Text */}
       <div className="hidden lg:flex lg:w-1/2 bg-blue-600 p-12 items-center justify-center relative overflow-hidden">
         <div className="relative z-10 max-w-lg text-center lg:text-left">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-white mb-8 overflow-hidden"
           >
             <img src="/logo.jpeg" alt="Lincoz POS" className="w-full h-full object-cover" />
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -58,7 +58,7 @@ export default function LoginPage() {
           >
             Manage your business with <span className="text-blue-200">Confidence.</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -67,7 +67,7 @@ export default function LoginPage() {
             Lincoz POS provides the tools you need to scale your operations globally.
           </motion.p>
         </div>
-        
+
         {/* Abstract BG */}
         <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
           <div className="absolute top-1/4 -left-20 w-[60%] h-[60%] border-4 border-white/30 rounded-full"></div>
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
       {/* Right Side: Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-md"
@@ -92,10 +92,10 @@ export default function LoginPage() {
               <Label htmlFor="email">Email Address</Label>
               <div className="relative group">
                 <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
-                <Input 
-                  id="email" 
-                  type="email" 
-                  placeholder="name@company.com" 
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@company.com"
                   className="pl-10 h-12 rounded-xl border-slate-200 focus:ring-blue-600"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -111,10 +111,10 @@ export default function LoginPage() {
               </div>
               <div className="relative group">
                 <Lock className="absolute left-3 top-3 w-5 h-5 text-slate-400 group-focus-within:text-blue-600 transition-colors" />
-                <Input 
-                  id="password" 
-                  type="password" 
-                  placeholder="••••••••" 
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
                   className="pl-10 h-12 rounded-xl border-slate-200 focus:ring-blue-600"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -123,8 +123,8 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-lg font-black shadow-xl shadow-blue-100 text-white transition-all active:scale-95"
               disabled={loading}
             >

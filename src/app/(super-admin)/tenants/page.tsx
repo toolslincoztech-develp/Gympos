@@ -5,6 +5,7 @@ import {
   Plus, Search, Building2, Mail, Phone, CheckCircle2, XCircle,
   Edit2, CreditCard, RefreshCw, ArrowUpCircle, ChevronRight,
   Package, Trash2, MoreVertical, LogIn, ExternalLink,
+  MapPin, Lock, Eye, EyeOff, Sparkles, Loader2, Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +42,7 @@ export default function TenantsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isManageModalOpen, setIsManageModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [newBusiness, setNewBusiness] = useState({ name: "", email: "", phone: "", address: "", planId: "", adminPassword: "" });
   
   // Custom modules config state
@@ -406,59 +408,164 @@ export default function TenantsPage() {
 
       {/* Add Business Modal */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <DialogContent className="sm:max-w-[600px] rounded-[32px] p-0 border-none shadow-2xl">
-          <div className="bg-white p-8">
-            <DialogHeader className="mb-8 text-left">
-              <DialogTitle className="text-3xl font-black text-slate-900 tracking-tight">New Business</DialogTitle>
-              <p className="text-slate-500 font-bold mt-1">Register a new client onto the Lincoz POS platform.</p>
-            </DialogHeader>
-            <form onSubmit={handleCreateBusiness} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Business Name *</label>
-                <Input placeholder="e.g. Pizza Palace" className="h-14 rounded-2xl bg-slate-50 border-slate-100 text-lg font-bold px-5" required
-                  value={newBusiness.name} onChange={(e) => setNewBusiness({ ...newBusiness, name: e.target.value })} />
+        <DialogContent className="sm:max-w-[620px] rounded-3xl p-0 border border-slate-200/80 shadow-2xl overflow-hidden bg-white">
+          <div className="p-7 sm:p-9 space-y-7">
+            {/* Modal Header */}
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
+                <Store className="w-6 h-6 stroke-[2.2]" />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Admin Email</label>
-                  <Input placeholder="admin@business.com" className="h-14 rounded-2xl bg-slate-50 border-slate-100 text-lg font-bold px-5"
-                    value={newBusiness.email} onChange={(e) => setNewBusiness({ ...newBusiness, email: e.target.value })} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">New Business</h2>
+                  <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/60">
+                    Onboarding
+                  </span>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Phone</label>
-                  <Input placeholder="+92..." className="h-14 rounded-2xl bg-slate-50 border-slate-100 text-lg font-bold px-5"
-                    value={newBusiness.phone} onChange={(e) => setNewBusiness({ ...newBusiness, phone: e.target.value })} />
+                <p className="text-sm font-semibold text-slate-500 mt-1">
+                  Register a new client onto the Lincoz POS platform.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleCreateBusiness} className="space-y-5">
+              {/* Business Name */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5 text-blue-600" />
+                  Business Name <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <Input
+                    placeholder="e.g. Iron Gym & Fitness Club"
+                    className="h-12 rounded-xl bg-slate-50/70 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-500 text-base font-semibold px-4 transition-all"
+                    required
+                    value={newBusiness.name}
+                    onChange={(e) => setNewBusiness({ ...newBusiness, name: e.target.value })}
+                  />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Address</label>
-                <Input placeholder="Business address" className="h-14 rounded-2xl bg-slate-50 border-slate-100 text-lg font-bold px-5"
-                  value={newBusiness.address} onChange={(e) => setNewBusiness({ ...newBusiness, address: e.target.value })} />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Admin Password</label>
-                  <Input type="password" placeholder="Default: admin123" className="h-14 rounded-2xl bg-slate-50 border-slate-100 text-lg font-bold px-5"
-                    value={newBusiness.adminPassword} onChange={(e) => setNewBusiness({ ...newBusiness, adminPassword: e.target.value })} />
+
+              {/* Email & Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-blue-600" />
+                    Admin Email
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="admin@business.com"
+                    className="h-12 rounded-xl bg-slate-50/70 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-500 text-sm font-semibold px-4 transition-all"
+                    value={newBusiness.email}
+                    onChange={(e) => setNewBusiness({ ...newBusiness, email: e.target.value })}
+                  />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Subscription Plan</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-blue-600" />
+                    Phone Number
+                  </label>
+                  <Input
+                    placeholder="+92 300 1234567"
+                    className="h-12 rounded-xl bg-slate-50/70 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-500 text-sm font-semibold px-4 transition-all"
+                    value={newBusiness.phone}
+                    onChange={(e) => setNewBusiness({ ...newBusiness, phone: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                  Address / Branch Location
+                </label>
+                <Input
+                  placeholder="e.g. Gulberg III, Main Boulevard, Lahore"
+                  className="h-12 rounded-xl bg-slate-50/70 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-500 text-sm font-semibold px-4 transition-all"
+                  value={newBusiness.address}
+                  onChange={(e) => setNewBusiness({ ...newBusiness, address: e.target.value })}
+                />
+              </div>
+
+              {/* Admin Password & Subscription Plan */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-blue-600" />
+                    Admin Password
+                  </label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Default: admin123"
+                      className="h-12 rounded-xl bg-slate-50/70 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-500 text-sm font-semibold pl-4 pr-11 transition-all"
+                      value={newBusiness.adminPassword}
+                      onChange={(e) => setNewBusiness({ ...newBusiness, adminPassword: e.target.value })}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 rounded-lg transition-colors"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <CreditCard className="w-3.5 h-3.5 text-blue-600" />
+                    Subscription Plan
+                  </label>
                   <Select value={newBusiness.planId} onValueChange={(v) => setNewBusiness({ ...newBusiness, planId: v })}>
-                    <SelectTrigger className="h-14 rounded-2xl bg-slate-50 border-slate-100 text-lg font-bold px-5"><SelectValue placeholder="Select a plan" /></SelectTrigger>
-                    <SelectContent position="popper" className="rounded-2xl border-slate-100 shadow-2xl z-[100]">
+                    <SelectTrigger className="h-12 w-full rounded-xl bg-slate-50/70 border-slate-200 hover:border-slate-300 focus:bg-white focus:border-blue-500 text-sm font-semibold px-4 transition-all">
+                      <SelectValue placeholder="Select a plan" />
+                    </SelectTrigger>
+                    <SelectContent position="popper" align="start" className="w-[var(--radix-select-trigger-width)] max-h-72 rounded-2xl bg-white border border-slate-200 shadow-2xl p-1.5 z-[9999]">
                       {plans.map((p) => (
-                        <SelectItem key={p.id} value={p.id} className="rounded-xl font-bold py-3 uppercase tracking-tighter">{p.name} — ${p.price}</SelectItem>
+                        <SelectItem key={p.id} value={p.id} className="rounded-xl py-2.5 px-3 font-semibold text-slate-800 hover:bg-slate-100 focus:bg-blue-50 focus:text-blue-700 cursor-pointer">
+                          <div className="flex items-center justify-between w-full gap-3">
+                            <span className="font-bold text-slate-900">{p.name}</span>
+                            <span className="text-xs font-extrabold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200/50">
+                              ${p.price}
+                            </span>
+                          </div>
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
               </div>
-              <div className="pt-4 flex gap-4">
-                <Button type="button" variant="ghost" onClick={() => setIsAddModalOpen(false)} className="flex-1 h-14 rounded-2xl font-black text-slate-500 hover:bg-slate-50">
+
+              {/* Action Buttons */}
+              <div className="pt-3 flex items-center gap-3 border-t border-slate-100">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="flex-1 h-12 rounded-xl font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                >
                   Cancel
                 </Button>
-                <Button disabled={isSubmitting} className="flex-[2] h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 font-black text-lg shadow-xl shadow-blue-100 text-white transition-all active:scale-95">
-                  {isSubmitting ? "Processing..." : "Create Business"}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-[1.5] h-12 rounded-xl bg-blue-600 hover:bg-blue-700 font-bold text-sm text-white shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 stroke-[2.5]" />
+                      <span>Create Business</span>
+                    </>
+                  )}
                 </Button>
               </div>
             </form>

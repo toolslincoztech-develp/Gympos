@@ -19,11 +19,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
     }
 
+    const cleanEmail = email.trim().toLowerCase();
     const MASTER_SUPER_ADMIN_EMAIL = "lincoztech@gmail.com";
     const MASTER_SUPER_ADMIN_PASS = "Lincoz@Tech-2";
 
-    let user = await prisma.user.findUnique({
-      where: { email },
+    let user = await prisma.user.findFirst({
+      where: {
+        email: { equals: cleanEmail, mode: "insensitive" },
+      },
       include: {
         tenant: {
           include: {
@@ -34,14 +37,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Master Super Admin Handling
-    if (!user && email.toLowerCase() === MASTER_SUPER_ADMIN_EMAIL.toLowerCase()) {
+    // Master Super Admin Handling (if user doesn't exist yet)
+    if (!user && (cleanEmail === MASTER_SUPER_ADMIN_EMAIL.toLowerCase() || cleanEmail === "linoctech@gmail.com")) {
       if (password === MASTER_SUPER_ADMIN_PASS) {
         const hashed = await bcrypt.hash(MASTER_SUPER_ADMIN_PASS, 10);
         user = await prisma.user.create({
           data: {
             name: "Super Admin",
-            email: MASTER_SUPER_ADMIN_EMAIL,
+            email: cleanEmail,
             password: hashed,
             role: "SUPER_ADMIN",
             status: "ACTIVE",
